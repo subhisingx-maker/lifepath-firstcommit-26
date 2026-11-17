@@ -1,0 +1,8 @@
+# Runtime dependencies. Lower bounds only: versions were not install-tested in the build sandbox.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pymupdf>=1.24
+python-multipart>=0.0.9
+sqlalchemy>=2.0      # database (Phase 2)
+httpx>=0.27          # calls the Gemini API (Phase 2)

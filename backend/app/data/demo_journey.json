@@ -1,0 +1,326 @@
+{
+  "fictional": true,
+  "banner": "DEMO DATA - NOT AN OFFICIAL UNIVERSITY NOTIFICATION. Demo National University is fictional.",
+  "id": "demo-dnu-bsc-2027-28",
+  "name": "Demo: B.Sc. at Demo National University",
+  "institution": "Demo National University",
+  "programme": "Bachelor of Science",
+  "academic_year": "2027-28",
+  "goal": "Undergraduate admission",
+  "sources": [
+    {
+      "name": "01_demo_national_university_bsc_2027-28.pdf",
+      "pages": 4,
+      "note": "Fictional sample notice. See sample_notices/ in the project."
+    }
+  ],
+  "eligibility": [
+    {
+      "text": "Candidates must have passed Class 12 with Physics, Chemistry and Mathematics or Biology.",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 1,
+      "source_quote": "Candidates must have passed Class 12 with Physics, Chemistry and Mathematics or Biology.",
+      "verification": "verified_against_source"
+    },
+    {
+      "text": "Candidates must have a minimum of 50% aggregate marks (fictional rule).",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 1,
+      "source_quote": "Candidates must have a minimum of 50% aggregate marks (fictional rule).",
+      "verification": "verified_against_source"
+    }
+  ],
+  "documents": [
+    {
+      "id": "d1",
+      "name": "Class 12 marksheet",
+      "requirement": "mandatory",
+      "why": "Needed to check the eligibility conditions.",
+      "condition": null,
+      "format": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Mandatory: Class 12 marksheet.",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "d2",
+      "name": "Photo ID proof",
+      "requirement": "mandatory",
+      "why": "Identity proof.",
+      "condition": null,
+      "format": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Mandatory: Photo ID proof.",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "d3",
+      "name": "Passport-size photograph",
+      "requirement": "mandatory",
+      "why": "Uploaded with the form.",
+      "condition": null,
+      "format": "JPG, maximum 100 KB",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Mandatory: Passport-size photograph in JPG format, maximum 100 KB.",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "d4",
+      "name": "Category certificate",
+      "requirement": "conditional",
+      "why": "Needed only to claim a reserved seat.",
+      "condition": "Only if claiming a reserved seat",
+      "format": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Conditional: Category certificate is required only if the candidate is claiming a reserved seat.",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "d5",
+      "name": "Migration certificate",
+      "requirement": "conditional",
+      "why": "Needed when the Class 12 board is outside the home state.",
+      "condition": "Only if the Class 12 board is outside the home state",
+      "format": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Conditional: Migration certificate is required only if the Class 12 board is outside the home state.",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "d6",
+      "name": "Extracurricular certificates",
+      "requirement": "optional",
+      "why": "Used for the profile section.",
+      "condition": null,
+      "format": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Optional: Extracurricular certificates may be uploaded for the profile section.",
+      "verification": "verified_against_source"
+    }
+  ],
+  "warnings": [
+    {
+      "text": "All dates and rules here are fictional and for demonstration only.",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 1,
+      "source_quote": "DEMO DATA - NOT AN OFFICIAL UNIVERSITY NOTIFICATION."
+    }
+  ],
+  "not_specified": [
+    {
+      "text": "The notice gives no steps for candidates who are not selected, other than checking the waitlist notice.",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "This notice does not specify any other steps for candidates who are not selected."
+    }
+  ],
+  "deadlines": [
+    {
+      "label": "Registration opens",
+      "text": "1 February 2027",
+      "date": "2027-02-01",
+      "source_page": 3
+    },
+    {
+      "label": "Registration closes",
+      "text": "28 February 2027",
+      "date": "2027-02-28",
+      "source_page": 3
+    },
+    {
+      "label": "Application form submission",
+      "text": "15 March 2027",
+      "date": "2027-03-15",
+      "source_page": 3
+    },
+    {
+      "label": "Merit list published",
+      "text": "1 April 2027",
+      "date": "2027-04-01",
+      "source_page": 4
+    },
+    {
+      "label": "Seat acceptance",
+      "text": "within 5 days of the merit list",
+      "date": null,
+      "source_page": 4
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "title": "Check your eligibility",
+      "description": "Make sure you meet the basic conditions before spending time on the form.",
+      "why_it_matters": "Applying without meeting eligibility wastes the fee and effort.",
+      "what_to_do": "Compare your Class 12 subjects and aggregate marks with the eligibility section.",
+      "required_documents": [],
+      "deadline_text": null,
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 1,
+      "source_quote": "Candidates must have passed Class 12 with Physics, Chemistry and Mathematics or Biology.",
+      "depends_on": [],
+      "branch": null,
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s2",
+      "title": "Gather your documents",
+      "description": "Collect the mandatory documents, plus any conditional ones that apply to you.",
+      "why_it_matters": "Missing documents can stop your application later.",
+      "what_to_do": "Use the document checklist and mark each document as prepared.",
+      "required_documents": [
+        "Class 12 marksheet",
+        "Photo ID proof",
+        "Passport-size photograph"
+      ],
+      "deadline_text": null,
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 2,
+      "source_quote": "Documents required.",
+      "depends_on": [
+        "s1"
+      ],
+      "branch": null,
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s3",
+      "title": "Register on the portal",
+      "description": "Create your account on the admissions portal.",
+      "why_it_matters": "Registration is what lets you open the application form.",
+      "what_to_do": "Register with an email address and mobile number.",
+      "required_documents": [],
+      "deadline_text": "1 February 2027 to 28 February 2027 (fictional)",
+      "deadline_date": "2027-02-28",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 3,
+      "source_quote": "Register on the Demo Admissions Portal using an email address and mobile number between 1 February 2027 and 28 February 2027 (fictional dates).",
+      "depends_on": [
+        "s1"
+      ],
+      "branch": null,
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s4",
+      "title": "Fill and submit the application form",
+      "description": "Enter academic details, upload documents, pay the fee and submit.",
+      "why_it_matters": "Only submitted forms are considered for the merit list.",
+      "what_to_do": "Fill in academic details, upload the required documents, pay the application fee and submit.",
+      "required_documents": [
+        "All mandatory documents"
+      ],
+      "deadline_text": "15 March 2027 (fictional)",
+      "deadline_date": "2027-03-15",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 3,
+      "source_quote": "fill in academic details, upload the required documents, pay the application fee and submit the form by 15 March 2027 (fictional date).",
+      "depends_on": [
+        "s2",
+        "s3"
+      ],
+      "branch": null,
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s5",
+      "title": "Check the merit list",
+      "description": "See whether your name appears when the merit list is published.",
+      "why_it_matters": "The result decides which steps come next.",
+      "what_to_do": "Open the merit list, then record your result in LIFEPATH.",
+      "required_documents": [],
+      "deadline_text": "1 April 2027 (fictional)",
+      "deadline_date": "2027-04-01",
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "The merit list will be published on 1 April 2027 (fictional date).",
+      "depends_on": [
+        "s4"
+      ],
+      "branch": null,
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s6",
+      "title": "Accept your seat",
+      "description": "Confirm that you want the seat you were offered.",
+      "why_it_matters": "An unaccepted seat may be lost.",
+      "what_to_do": "Accept the seat within 5 days of the merit list.",
+      "required_documents": [],
+      "deadline_text": "within 5 days of the merit list (fictional)",
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "Selected candidates must accept the seat within 5 days, pay the admission fee and bring original documents for verification.",
+      "depends_on": [
+        "s5"
+      ],
+      "branch": "selected",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s7",
+      "title": "Pay the admission fee",
+      "description": "Pay the admission fee.",
+      "why_it_matters": "The notice lists the fee as part of accepting the seat.",
+      "what_to_do": "Pay the admission fee as instructed on the portal.",
+      "required_documents": [],
+      "deadline_text": "within 5 days of the merit list (fictional)",
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "Selected candidates must accept the seat within 5 days, pay the admission fee and bring original documents for verification.",
+      "depends_on": [
+        "s6"
+      ],
+      "branch": "selected",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s8",
+      "title": "Bring originals for verification",
+      "description": "Take your original documents for verification.",
+      "why_it_matters": "The notice requires originals to be verified.",
+      "what_to_do": "Carry the originals of the documents you uploaded.",
+      "required_documents": [
+        "Originals of all uploaded documents"
+      ],
+      "deadline_text": null,
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "Selected candidates must accept the seat within 5 days, pay the admission fee and bring original documents for verification.",
+      "depends_on": [
+        "s7"
+      ],
+      "branch": "selected",
+      "verification": "verified_against_source"
+    },
+    {
+      "id": "s9",
+      "title": "Check the waitlist notice",
+      "description": "See whether you appear on the waitlist notice.",
+      "why_it_matters": "It is the only option this notice mentions if you are not selected.",
+      "what_to_do": "Look for the waitlist notice. This notice lists no other steps.",
+      "required_documents": [],
+      "deadline_text": null,
+      "deadline_date": null,
+      "source_document": "01_demo_national_university_bsc_2027-28.pdf",
+      "source_page": 4,
+      "source_quote": "Candidates who are not selected may check the waitlist notice.",
+      "depends_on": [
+        "s5"
+      ],
+      "branch": "not_selected",
+      "verification": "verified_against_source"
+    }
+  ]
+}

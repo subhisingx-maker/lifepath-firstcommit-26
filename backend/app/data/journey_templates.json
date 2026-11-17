@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "_note": "Edit this file to change which steps exist and how they depend on each other. It holds GENERAL LIFEPATH guidance only: a step is created only when the notice (reviewed items) supports it. depends_on here is a general flow, shown to users as 'general flow', not as a rule from the notice.",
+  "outcomes": ["selected", "waitlisted", "not_selected"],
+  "outcome_anchor": "check_merit_list",
+  "steps": [
+    {
+      "key": "check_eligibility",
+      "title": "Check your eligibility",
+      "categories": ["eligibility"],
+      "stage_keywords": [],
+      "event_keys": [],
+      "depends_on": [],
+      "guidance": {
+        "why_it_matters": "Applying without meeting the conditions can waste your time and fees.",
+        "what_to_do": "Compare each condition below with your own marks, subjects and circumstances."
+      }
+    },
+    {
+      "key": "prepare_documents",
+      "title": "Prepare your documents",
+      "categories": ["document"],
+      "stage_keywords": [],
+      "event_keys": [],
+      "depends_on": ["check_eligibility"],
+      "guidance": {
+        "why_it_matters": "Missing or wrongly formatted documents are a common reason applications are delayed.",
+        "what_to_do": "Collect the mandatory documents. Prepare the conditional ones only if their condition applies to you."
+      }
+    },
+    {
+      "key": "register",
+      "title": "Register",
+      "categories": [],
+      "stage_keywords": ["regist", "sign up", "create an account", "create account"],
+      "event_keys": ["registration_open", "registration_close"],
+      "depends_on": ["check_eligibility"],
+      "guidance": {
+        "why_it_matters": "Registration is normally what gives you access to the application form.",
+        "what_to_do": "Follow the registration instructions quoted below."
+      }
+    },
+    {
+      "key": "complete_application",
+      "title": "Fill in and submit the application form",
+      "categories": [],
+      "stage_keywords": ["application form", "submit the form", "submit your application", "submit the application", "apply online"],
+      "event_keys": ["application_close", "application_form_close", "form_submission_close"],
+      "depends_on": ["register", "prepare_documents"],
+      "guidance": {
+        "why_it_matters": "Only submitted applications are considered.",
+        "what_to_do": "Complete the form as the notice describes and keep the confirmation."
+      }
+    },
+    {
+      "key": "pay_application_fee",
+      "title": "Pay the application fee",
+      "categories": [],
+      "stage_keywords": ["application fee", "pay the fee", "fee payment"],
+      "event_keys": ["fee_payment_close", "application_fee_close"],
+      "depends_on": ["register"],
+      "guidance": {
+        "why_it_matters": "An unpaid fee can make an application invalid.",
+        "what_to_do": "Pay through the method the notice allows and keep the receipt."
+      }
+    },
+    {
+      "key": "check_merit_list",
+      "title": "Check the merit or rank list",
+      "categories": [],
+      "stage_keywords": ["merit list", "rank list", "cut-off list", "cutoff list", "selection list", "allotment"],
+      "event_keys": ["merit_list_publication", "rank_list_publication", "cutoff_list_publication"],
+      "depends_on": ["complete_application"],
+      "guidance": {
+        "why_it_matters": "Your result decides which steps apply to you next.",
+        "what_to_do": "Look for your name or rank, then record your result in LIFEPATH."
+      }
+    }
+  ],
+  "suggested": {
+    "confirm_official_notice": {
+      "title": "Read the full notice and confirm key dates on the official website",
+      "guidance": {
+        "why_it_matters": "LIFEPATH summarises documents and can make mistakes. Notices are also revised.",
+        "what_to_do": "Read the original notice end to end and check the official website for revisions."
+      }
+    },
+    "no_instructions": {
+      "title_template": "Check the official instructions for what happens if your result is '{outcome}'",
+      "guidance": {
+        "why_it_matters": "The uploaded documents do not describe this situation, so LIFEPATH cannot tell you what to do.",
+        "what_to_do": "Check the university's official instructions or contact the admissions office."
+      }
+    }
+  }
+}
