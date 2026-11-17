@@ -4,7 +4,7 @@ Turns admission notices into clear, source-backed, step-by-step journeys. This r
 single-file prototype (`legacy/LIFEPATH.html`, kept for recovery) to React + FastAPI. See `docs/CHECKLIST.md` for
 what is done and what is pending.
 
-## Current status: Phase 2 + journey preview (Step B)
+## Current status: React frontend + FastAPI backend + journey preview
 
 Works without an API key (demo mode): PDF text extraction by page, scanned/corrupt/oversized file handling,
 deterministic date detection, the fictional demo journey API, draft analyses stored in SQLite, four fictional
@@ -15,9 +15,12 @@ Every proposed quote is re-checked against the real document text, dates come fr
 conflicts between documents are flagged for a person to resolve. The live Gemini call has not been run yet.
 
 Journey preview: reviewed items become steps with dependencies and selected / waitlisted / not-selected branches.
-It is a preview only (not saved) and uses no AI.
+It is a preview only (not saved) and uses no AI. The React frontend is in `lifepath frontend/` and uses the
+fictional demo endpoint by default; uploaded notices use the analysis and journey-preview endpoints.
 
-Not built yet: saved journeys and progress, personalised applicability, RAG assistant, OCR, the React frontend, migrations.
+Not built yet: saved journeys and progress, personalised applicability, RAG assistant, OCR, migrations, and
+production authentication. Without Gemini credentials, uploads can be extracted and stored but do not yield
+AI-proposed requirements; use the clearly labelled fictional demo for a complete no-key walkthrough.
 
 ## Quick start (backend)
 
@@ -34,6 +37,38 @@ uvicorn app.main:app --reload
 
 Open http://127.0.0.1:8000/docs. `GET /api/health` reports `"ai_mode": "demo"` until `GEMINI_API_KEY` is set in
 `backend/.env`.
+
+## Quick start (frontend)
+
+```bash
+cd "lifepath frontend"
+npm ci
+npm run dev
+```
+
+The local frontend defaults to `http://127.0.0.1:8000`. Set `VITE_API_BASE_URL` in a local `.env` file only when
+you want to use a different API. The production build defaults to the deployed Render API and can be overridden
+with the same Netlify environment variable.
+
+## Deploy
+
+The root `netlify.toml` sets Netlify's base directory to `lifepath frontend`, installs from the checked-in lockfile,
+builds with `npm run build`, and publishes `dist`. Connect the existing GitHub repository to Netlify and use the
+`master` branch; these settings should be detected from the file. No frontend secret is needed.
+
+On Render, set `CORS_ORIGINS` to the exact public origin of the Netlify site (for example,
+`https://your-site-name.netlify.app`) plus any local origins you need, separated by commas. Do not include a path or
+trailing slash. Keep `GEMINI_API_KEY` in Render's environment settings only; never put it in GitHub or the frontend.
+After saving the Render environment change, redeploy the backend. Without the Gemini key, the bundled fictional demo
+still works; notice upload will not create extracted requirements or a journey.
+
+## Fictional end-to-end demo
+
+Open the deployed frontend, choose **Upload notice**, and select
+`sample_notices/01_demo_national_university_bsc_2027-28.pdf`. It is explicitly fictional. In demo mode the PDF text
+can be extracted and stored, but journey generation from uploaded notices requires Gemini. The complete, no-key
+journey walkthrough is loaded from `GET /api/demo/journey`; confirm the **Demo data** banner and verify dates and
+quotes against the fictional PDF. Never present this sample as an official university notice.
 
 ## Endpoints so far
 

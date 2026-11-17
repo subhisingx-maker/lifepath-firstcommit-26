@@ -7,7 +7,8 @@ import {
   Sparkles, Upload, X, XCircle
 } from 'lucide-react'
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, '')
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ||
+  (import.meta.env.PROD ? 'https://lifepath-firstcommit-26.onrender.com' : 'http://127.0.0.1:8000')).replace(/\/$/, '')
 const todayLabel = new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date()).toUpperCase()
 const fallbackJourney = {
   university: 'Demo National University', programme: 'B.Sc. 2027–28',
