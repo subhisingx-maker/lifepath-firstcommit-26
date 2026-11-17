@@ -174,13 +174,22 @@ function normalizeBackendJourney(data, analysisData) {
 function Badge({ children, tone = 'neutral', className = '' }) { return <span className={`badge badge-${tone} ${className}`}>{children}</span> }
 function SectionTitle({ eyebrow, title, action }) { return <div className="section-title"><div><div className="eyebrow">{eyebrow}</div><h2>{title}</h2></div>{action}</div> }
 
+function savedProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('lifepath-completed') || '[]')
+    return Array.isArray(saved) ? saved.filter(n => Number.isInteger(n) && n >= 0) : []
+  } catch {
+    return []
+  }
+}
+
 function App() {
   const [page, setPage] = useState('Overview')
   const [journey, setJourney] = useState(null)
   const [source, setSource] = useState('loading')
   const [apiError, setApiError] = useState('')
   const [apiErrorTitle, setApiErrorTitle] = useState('Backend unavailable.')
-  const [selected, setSelected] = useState(() => JSON.parse(localStorage.getItem('lifepath-completed') || '[]'))
+  const [selected, setSelected] = useState(savedProgress)
   const [branch, setBranch] = useState('selected')
   const [mobileMenu, setMobileMenu] = useState(false)
   const [file, setFile] = useState(null)
@@ -245,7 +254,6 @@ function App() {
 
       const journeyPayload = await readApiJson(journeyResponse, 'Building the admission journey')
 
-      console.log('LIFEPATH journey:', journeyPayload)
       setJourney(normalizeBackendJourney(journeyPayload, payload))
       setSource('analysis')
       setSelected([])
@@ -325,7 +333,7 @@ function App() {
     <main className="main-area">
       <header className="topbar"><button className="icon-button menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Open menu"><Menu size={20} /></button><div className="breadcrumb">Workspace <ChevronRight size={14} /> <strong>{page}</strong></div><div className="top-actions"><div className="search-box"><Search size={16} /><span>Search anything...</span><kbd>⌘ K</kbd></div><button className="icon-button notification" aria-label="Notifications" onClick={() => showToast('You’re all caught up.')}><Bell size={18} /><i /></button><div className="avatar top-avatar">A</div></div></header>
       <div className="page-wrap">
-        <div className="demo-notice"><div className="demo-icon"><Sparkles size={15} /></div><div><b>DEMO MODE</b><span>{source === 'api' ? 'Connected to the demo journey endpoint. All university and applicant information shown is fictional.' : 'Fictional demonstration data · Not an official university notification'}</span></div><button onClick={loadJourney} disabled={source === 'loading'} title="Retry backend connection"><LoaderCircle className={source === 'loading' ? 'spin' : ''} size={16} /> {source === 'loading' ? 'Connecting' : source === 'api' ? 'Refresh' : 'Retry connection'}</button></div>
+        <div className="demo-notice"><div className="demo-icon"><Sparkles size={15} /></div><div><b>{source === 'analysis' ? 'UPLOADED NOTICE' : 'DEMO MODE'}</b><span>{source === 'analysis' ? 'Review the extracted information against the official notice before relying on it.' : source === 'api' ? 'Connected to the demo journey endpoint. All university and applicant information shown is fictional.' : 'Fictional demonstration data · Not an official university notification'}</span></div><button onClick={loadJourney} disabled={source === 'loading'} title="Load the fictional demo"><LoaderCircle className={source === 'loading' ? 'spin' : ''} size={16} /> {source === 'loading' ? 'Connecting' : source === 'analysis' ? 'Load demo' : source === 'api' ? 'Refresh' : 'Retry connection'}</button></div>
         {apiError && <div className="connection-alert"><AlertCircle size={16} /><span><b>{apiErrorTitle}</b> {apiError}</span><button onClick={() => setApiError('')} aria-label="Dismiss"><X size={16} /></button></div>}
         {analysis?.conflicts?.some(c => !c.resolved) && (
   <section className="panel" style={{ marginBottom: 24, padding: 24, color: '#222222', background: '#ffffff' }}>
@@ -368,7 +376,7 @@ function App() {
           {page === 'Profile' && <ProfilePage showToast={showToast} />}
         </>}
       </div>
-      <footer className="footer"><span>© 2026 LIFEPATH · Unscripted Minds</span><span><span className="live-dot" /> {source === 'api' ? 'Backend connected' : 'Demo preview'} <span className="footer-sep">·</span> FirstCommit '26</span></footer>
+      <footer className="footer"><span>© 2026 LIFEPATH · Unscripted Minds</span><span><span className="live-dot" /> {source === 'analysis' || source === 'api' ? 'Backend connected' : 'Demo preview'} <span className="footer-sep">·</span> FirstCommit '26</span></footer>
     </main>
     {toast && <div className="toast"><CheckCircle2 size={17} />{toast}</div>}
   </div>
@@ -403,7 +411,7 @@ function StatCard({ label, value, detail, icon, trend, accent = 'blue' }) { retu
 
 function JourneyPage({ journey, steps, selected, toggleStep, branch, setBranch }) {
   const outcomes = journey.outcomes?.[branch] || []
-  return <><PageHeading eyebrow="YOUR PERSONAL ROADMAP" title="Admission journey" description="Every step, deadline, and decision in one clear path." /><section className="panel journey-page-panel"><div className="journey-toolbar"><div className="journey-summary"><span className="journey-progress-mark"><Activity size={17} /></span><div><b>{journey.programme}</b><span>{selected.length} of {journey.steps.length} steps complete</span></div></div><div className="segmented branch-switch"><button className={branch === 'selected' ? 'chosen' : ''} onClick={() => setBranch('selected')}><CheckCircle2 size={14} /> Selected</button><button className={branch === 'not_selected' ? 'chosen' : ''} onClick={() => setBranch('not_selected')}><XCircle size={14} /> Not selected</button></div></div><div className="journey-list">{steps.map((step) => { const originalIndex = journey.steps.indexOf(step); const completed = selected.includes(originalIndex) || step.status === 'complete'; return <article className={`journey-step ${completed ? 'journey-step-complete' : ''}`} key={`${step.title}-${originalIndex}`}><div className="journey-rail"><button className={`journey-node ${completed ? 'node-done' : ''}`} onClick={() => toggleStep(originalIndex)}>{completed ? <Check size={14} /> : <span>{String(originalIndex + 1).padStart(2, '0')}</span>}</button></div><div className="journey-step-card"><div className="journey-step-heading"><div><div className="journey-step-meta"><Badge tone={step.branch ? (branch === 'selected' ? 'green' : 'violet') : completed ? 'green' : 'blue'}>{step.branch ? (step.branch === 'selected' ? 'IF SELECTED' : 'IF NOT SELECTED') : completed ? 'COMPLETED' : 'STEP'}</Badge><span><CalendarDays size={13} /> {step.date}</span></div><h3>{step.title}</h3></div><button className="icon-plain" onClick={() => toggleStep(originalIndex)} title={completed ? 'Mark incomplete' : 'Mark complete'}>{completed ? <CheckCircle2 size={19} className="green-text" /> : <CircleUserRound size={18} />}</button></div><p>{step.description}</p>{step.page && <div className="source-ref"><BookOpenCheck size={14} /><span>Source reference</span><b>Page {step.page}</b><span className="source-sep">·</span><span>Demo notice</span></div>}</div></article> })}</div><div className="branch-plan"><div className="branch-plan-icon">{branch === 'selected' ? <GraduationCap size={18} /> : <ArrowDownRight size={18} />}</div><div><Badge tone={branch === 'selected' ? 'green' : 'violet'}>OUTCOME PLAN</Badge><h3>{branch === 'selected' ? 'If you are selected' : 'If you are not selected'}</h3><p>Conditional next steps are included so you always know what to do after results.</p><ol>{outcomes.map((step, i) => <li key={step}><span>{i + 1}</span>{step}</li>)}</ol></div></div></section><div className="inline-warning"><AlertCircle size={16} /><span>{journey.warning || 'Demo content is fictional. Confirm all requirements and dates with the official notice.'}</span></div></>
+  return <><PageHeading eyebrow="YOUR PERSONAL ROADMAP" title="Admission journey" description="Every step, deadline, and decision in one clear path." /><section className="panel journey-page-panel"><div className="journey-toolbar"><div className="journey-summary"><span className="journey-progress-mark"><Activity size={17} /></span><div><b>{journey.programme}</b><span>{selected.length} of {journey.steps.length} steps complete</span></div></div><div className="segmented branch-switch"><button className={branch === 'selected' ? 'chosen' : ''} onClick={() => setBranch('selected')}><CheckCircle2 size={14} /> Selected</button><button className={branch === 'not_selected' ? 'chosen' : ''} onClick={() => setBranch('not_selected')}><XCircle size={14} /> Not selected</button></div></div><div className="journey-list">{steps.map((step) => { const originalIndex = journey.steps.indexOf(step); const completed = selected.includes(originalIndex) || step.status === 'complete'; return <article className={`journey-step ${completed ? 'journey-step-complete' : ''}`} key={`${step.title}-${originalIndex}`}><div className="journey-rail"><button className={`journey-node ${completed ? 'node-done' : ''}`} onClick={() => toggleStep(originalIndex)}>{completed ? <Check size={14} /> : <span>{String(originalIndex + 1).padStart(2, '0')}</span>}</button></div><div className="journey-step-card"><div className="journey-step-heading"><div><div className="journey-step-meta"><Badge tone={step.branch ? (branch === 'selected' ? 'green' : 'violet') : completed ? 'green' : 'blue'}>{step.branch ? (step.branch === 'selected' ? 'IF SELECTED' : 'IF NOT SELECTED') : completed ? 'COMPLETED' : 'STEP'}</Badge><span><CalendarDays size={13} /> {step.date}</span></div><h3>{step.title}</h3></div><button className="icon-plain" onClick={() => toggleStep(originalIndex)} title={completed ? 'Mark incomplete' : 'Mark complete'}>{completed ? <CheckCircle2 size={19} className="green-text" /> : <CircleUserRound size={18} />}</button></div><p>{step.description}</p>{step.page && <div className="source-ref"><BookOpenCheck size={14} /><span>Source reference</span><b>Page {step.page}</b><span className="source-sep">·</span><span>{journey.notice}</span></div>}</div></article> })}</div><div className="branch-plan"><div className="branch-plan-icon">{branch === 'selected' ? <GraduationCap size={18} /> : <ArrowDownRight size={18} />}</div><div><Badge tone={branch === 'selected' ? 'green' : 'violet'}>OUTCOME PLAN</Badge><h3>{branch === 'selected' ? 'If you are selected' : 'If you are not selected'}</h3><p>Conditional next steps are included so you always know what to do after results.</p><ol>{outcomes.map((step, i) => <li key={step}><span>{i + 1}</span>{step}</li>)}</ol></div></div></section><div className="inline-warning"><AlertCircle size={16} /><span>{journey.warning || 'Demo content is fictional. Confirm all requirements and dates with the official notice.'}</span></div></>
 }
 
 function DocumentsPage({ documents }) {
