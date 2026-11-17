@@ -28,6 +28,8 @@ class Analysis(Base):
     __tablename__ = "analyses"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_id)
+    # Hash of a high-entropy workspace credential; the credential itself is never stored.
+    owner_hash: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
     title: Mapped[Optional[str]] = mapped_column(String(200))
     institution: Mapped[Optional[str]] = mapped_column(String(300))
     programme: Mapped[Optional[str]] = mapped_column(String(300))

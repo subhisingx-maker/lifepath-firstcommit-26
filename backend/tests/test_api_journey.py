@@ -40,7 +40,7 @@ class JourneyPreviewApiTests(unittest.TestCase):
         app.dependency_overrides[get_settings] = lambda: Settings(ai_rate_limit_per_minute=100)
         app.dependency_overrides[analyses_api.get_ai_provider] = lambda: self.provider
         analyses_api.reset_limiter()
-        self.client = TestClient(app)
+        self.client = TestClient(app, headers={"X-Workspace-Token": "a" * 64})
 
     def tearDown(self):
         app.dependency_overrides.clear()

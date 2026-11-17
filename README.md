@@ -1,5 +1,8 @@
 # LIFEPATH - From confusion to completion
 
+**Development candidate:** See `docs/PRODUCTION_READINESS.md` before deploying this branch. Workspace access,
+durable storage, account recovery, and migration of older analyses still require production verification.
+
 Turns admission notices into clear, source-backed, step-by-step journeys. This repository is being migrated from a
 single-file prototype (`legacy/LIFEPATH.html`, kept for recovery) to React + FastAPI. See `docs/CHECKLIST.md` for
 what is done and what is pending.

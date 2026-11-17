@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Iterator, Optional
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -15,6 +15,10 @@ _factory: Optional[sessionmaker] = None
 
 
 def make_engine(url: str) -> Engine:
+    if url.startswith("postgres://"):
+        url = "postgresql+psycopg://" + url[len("postgres://"):]
+    elif url.startswith("postgresql://"):
+        url = "postgresql+psycopg://" + url[len("postgresql://"):]
     kwargs = {"connect_args": {"check_same_thread": False}} if url.startswith("sqlite") else {}
     engine = create_engine(url, **kwargs)
     if url.startswith("sqlite"):
@@ -34,7 +38,12 @@ def get_engine() -> Engine:
 
 def init_db(engine: Optional[Engine] = None) -> None:
     """Create tables if missing. Alembic migrations replace this once the schema settles (see CHECKLIST)."""
-    Base.metadata.create_all(engine or get_engine())
+    target = engine or get_engine()
+    Base.metadata.create_all(target)
+    # Keep legacy analyses intact but unclaimed: only newly owned records are accessible.
+    if 'owner_hash' not in {column['name'] for column in inspect(target).get_columns('analyses')}:
+        with target.begin() as connection:
+            connection.execute(text('ALTER TABLE analyses ADD COLUMN owner_hash VARCHAR(64)'))
 
 
 def get_db() -> Iterator[Session]:

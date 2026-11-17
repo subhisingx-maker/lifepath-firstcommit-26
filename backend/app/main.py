@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
     allowed_origins = list(dict.fromkeys((*settings.cors_origins, NETLIFY_FRONTEND_ORIGIN)))
     app.add_middleware(
         CORSMiddleware, allow_origins=allowed_origins,
-        allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_headers=["Content-Type"])
+        allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_headers=["Content-Type", "X-Workspace-Token"])
     app.include_router(router)
     app.include_router(analyses_router)
 

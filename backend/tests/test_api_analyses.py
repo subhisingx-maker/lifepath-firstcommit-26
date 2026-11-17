@@ -40,7 +40,7 @@ class AnalysisApiTests(unittest.TestCase):
         app.dependency_overrides[get_settings] = lambda: Settings(ai_rate_limit_per_minute=100)
         app.dependency_overrides[analyses_api.get_ai_provider] = lambda: self.provider
         analyses_api.reset_limiter()
-        self.client = TestClient(app)
+        self.client = TestClient(app, headers={"X-Workspace-Token": "a" * 64})
 
     def tearDown(self):
         app.dependency_overrides.clear()
@@ -49,6 +49,35 @@ class AnalysisApiTests(unittest.TestCase):
 
     def demo_mode(self):
         app.dependency_overrides[analyses_api.get_ai_provider] = lambda: None
+
+    def test_analyses_are_private_to_workspace(self):
+        self.demo_mode()
+        created = self.client.post("/api/analyses", files=upload(DEMO))
+        self.assertEqual(created.status_code, 201)
+        analysis_id = created.json()["id"]
+        other = {"X-Workspace-Token": "b" * 64}
+        self.assertEqual(self.client.get("/api/analyses", headers=other).json(), [])
+        for method, path in [("get", f"/api/analyses/{analysis_id}"),
+                             ("delete", f"/api/analyses/{analysis_id}"),
+                             ("post", f"/api/analyses/{analysis_id}/journey")]:
+            self.assertEqual(getattr(self.client, method)(path, headers=other).status_code, 404)
+        doc_id = created.json()["documents"][0]["id"]
+        self.assertEqual(self.client.get(f"/api/analyses/{analysis_id}/documents/{doc_id}/pages/1", headers=other).status_code, 404)
+        self.assertEqual(self.client.patch(f"/api/analyses/{analysis_id}", json={"title": "changed"}, headers=other).status_code, 404)
+        self.assertEqual(self.client.post(f"/api/analyses/{analysis_id}/documents", files=upload(DEMO), headers=other).status_code, 404)
+        self.assertEqual(self.client.get(f"/api/analyses/{analysis_id}").status_code, 200)
+
+    def test_invalid_workspace_credential_is_rejected(self):
+        self.assertEqual(self.client.get("/api/analyses", headers={"X-Workspace-Token": "bad"}).status_code, 401)
+
+    def test_browser_preflight_accepts_workspace_header(self):
+        response = self.client.options("/api/analyses", headers={
+            "Origin": "https://lifepath-firstcommit-26.netlify.app",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type,x-workspace-token",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.headers["access-control-allow-origin"], "https://lifepath-firstcommit-26.netlify.app")
 
     # ---- creation
     def test_demo_mode_stores_text_and_shows_dates_without_ai(self):
