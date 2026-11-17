@@ -1,8 +1,8 @@
 # Real-user readiness work in progress
 
-This branch is a development candidate, not a production release. It is not deployed on the public site.
+This hackathon build is not a production release. The public deployment must be checked separately.
 
-## Implemented locally
+## Implemented
 
 - Starts with a notice upload rather than automatically loading fictional data.
 - Uses a 256-bit per-browser workspace credential for analyses. The API stores only a SHA-256 hash and restricts listing, reading, modifying, and deleting analyses to the matching credential. Older unowned records are retained but cannot be accessed through these routes until a safe ownership migration is designed.

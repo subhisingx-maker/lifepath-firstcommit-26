@@ -1,7 +1,6 @@
 # LIFEPATH - From confusion to completion
 
-**Development candidate:** See `docs/PRODUCTION_READINESS.md` before deploying this branch. Workspace access,
-durable storage, account recovery, and migration of older analyses still require production verification.
+**Hackathon build:** The public app analyses text-based PDF notices using Gemini and presents a roadmap. Student profile details stay in the browser. This is a limited hackathon prototype; see `docs/PRODUCTION_READINESS.md` for privacy and reliability limitations.
 
 Turns admission notices into clear, source-backed, step-by-step journeys. This repository is being migrated from a
 single-file prototype (`legacy/LIFEPATH.html`, kept for recovery) to React + FastAPI. See `docs/CHECKLIST.md` for
@@ -15,14 +14,13 @@ sample PDFs.
 
 With `GEMINI_API_KEY` set: the AI proposes requirements (eligibility, documents, deadlines, stages, pathways).
 Every proposed quote is re-checked against the real document text, dates come from the deterministic parser, and
-conflicts between documents are flagged for a person to resolve. The live Gemini call has not been run yet.
+conflicts between documents are flagged for a person to resolve. A fictional notice has previously been tested with the live Gemini service; provider quota and availability can change.
 
 Journey preview: reviewed items become steps with dependencies and selected / waitlisted / not-selected branches.
 It is a preview only (not saved) and uses no AI. The React frontend is in `lifepath frontend/` and uses the
-fictional demo endpoint by default; uploaded notices use the analysis and journey-preview endpoints.
+uploaded notice flow by default; uploads use the analysis and journey-preview endpoints.
 
-Not built yet: saved journeys and progress, personalised applicability, RAG assistant, OCR, migrations, and
-production authentication. Without Gemini credentials, uploads can be extracted and stored but do not yield
+Not built yet: recoverable accounts, durable progress, authoritative eligibility decisions, OCR, and production authentication. Without Gemini credentials, uploads can be extracted and stored but do not yield
 AI-proposed requirements; use the clearly labelled fictional demo for a complete no-key walkthrough.
 
 ## Quick start (backend)
