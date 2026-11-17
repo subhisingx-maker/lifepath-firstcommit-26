@@ -47,19 +47,16 @@ npm run dev
 ```
 
 The local frontend defaults to `http://127.0.0.1:8000`. Set `VITE_API_BASE_URL` in a local `.env` file only when
-you want to use a different API. The production build defaults to the deployed Render API and can be overridden
-with the same Netlify environment variable.
+you want to use a different API. In production, requests go to `/api` on the frontend origin and Netlify proxies
+them to Render; this avoids a browser CORS dependency and can be overridden with the same Netlify environment variable.
 
 ## Deploy
 
 The root `netlify.toml` sets Netlify's base directory to `lifepath frontend`, installs from the checked-in lockfile,
-builds with `npm run build`, and publishes `dist`. Connect the existing GitHub repository to Netlify and use the
-`master` branch; these settings should be detected from the file. No frontend secret is needed.
-
-On Render, set `CORS_ORIGINS` to the exact public origin of the Netlify site (for example,
-`https://your-site-name.netlify.app`) plus any local origins you need, separated by commas. Do not include a path or
-trailing slash. Keep `GEMINI_API_KEY` in Render's environment settings only; never put it in GitHub or the frontend.
-After saving the Render environment change, redeploy the backend. Without the Gemini key, the bundled fictional demo
+builds with `npm run build`, publishes `dist`, and proxies `/api/*` to the deployed Render API. Connect the existing
+GitHub repository to Netlify and use the `master` branch; these settings should be detected from the file. No
+frontend secret or Render CORS change is needed for requests made by this frontend. Keep `GEMINI_API_KEY` in Render's
+environment settings only; never put it in GitHub or the frontend. Without a Gemini key, the bundled fictional demo
 still works; notice upload will not create extracted requirements or a journey.
 
 ## Fictional end-to-end demo

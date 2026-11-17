@@ -20,29 +20,24 @@
 No API key belongs in Netlify. The frontend uses the deployed Render API by default. `VITE_API_BASE_URL` is only
 needed if the backend URL changes.
 
-## Allow the Netlify site to call Render
+## Frontend-to-backend connection
 
-In the existing Render web service's environment settings, set `CORS_ORIGINS` to a comma-separated list containing
-the exact Netlify origin, for example:
-
-```text
-https://<site-name>.netlify.app,http://localhost:5173,http://127.0.0.1:5173
-```
-
-Use the real Netlify site name, with no trailing slash or path. Save the setting and redeploy the Render service.
+In production the frontend requests `/api/...` on its own Netlify origin. The `netlify.toml` rule proxies those
+requests to the existing Render API, so browser CORS does not need to be enabled for the public Netlify origin.
 Keep `GEMINI_API_KEY` in Render's secret environment settings only. Never add it to this repository or to Netlify.
 
 ## Verify the deployed connection
 
 Open these addresses, replacing `<site-name>` with the actual Netlify site name:
 
-- `https://<site-name>.netlify.app`
+- The existing Netlify site's public URL
 - `https://lifepath-firstcommit-26.onrender.com/api/health`
 - `https://lifepath-firstcommit-26.onrender.com/api/demo/journey`
 
 The health response should contain `"status":"ok"`; its `ai_mode` is `demo` when no Gemini key is configured and
 `live` when a real key is configured. The demo endpoint should contain `"fictional":true`, nine steps and an explicit
-fictional-data warning. In the browser, the page should load this API data without a connection/CORS warning.
+fictional-data warning. In the browser, the page should load this API data through the Netlify proxy without a
+connection warning.
 
 ## Demonstrate a fictional notice
 
