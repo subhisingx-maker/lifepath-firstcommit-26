@@ -47,15 +47,16 @@ npm run dev
 ```
 
 The local frontend defaults to `http://127.0.0.1:8000`. Set `VITE_API_BASE_URL` in a local `.env` file only when
-you want to use a different API. In production, requests go to `/api` on the frontend origin and Netlify proxies
-them to Render; this avoids a browser CORS dependency and can be overridden with the same Netlify environment variable.
+you want to use a different API. In production, requests go directly to the Render API so long-running notice analysis
+does not hit Netlify's proxy timeout. The backend allows the existing Netlify site origin; change that allowlist if the
+site's domain changes.
 
 ## Deploy
 
 The root `netlify.toml` sets Netlify's base directory to `lifepath frontend`, installs from the checked-in lockfile,
-builds with `npm run build`, publishes `dist`, and proxies `/api/*` to the deployed Render API. Connect the existing
+builds with `npm run build`, publishes `dist`, and keeps an `/api/*` proxy for simple requests. Connect the existing
 GitHub repository to Netlify and use the `master` branch; these settings should be detected from the file. No
-frontend secret or Render CORS change is needed for requests made by this frontend. Keep `GEMINI_API_KEY` in Render's
+frontend secret or dashboard change is needed for API routing. Keep `GEMINI_API_KEY` in Render's
 environment settings only; never put it in GitHub or the frontend. Without a Gemini key, the bundled fictional demo
 still works; notice upload will not create extracted requirements or a journey.
 

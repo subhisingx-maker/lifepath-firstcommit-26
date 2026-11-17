@@ -22,9 +22,10 @@ needed if the backend URL changes.
 
 ## Frontend-to-backend connection
 
-In production the frontend requests `/api/...` on its own Netlify origin. The `netlify.toml` rule proxies those
-requests to the existing Render API, so browser CORS does not need to be enabled for the public Netlify origin.
-Keep `GEMINI_API_KEY` in Render's secret environment settings only. Never add it to this repository or to Netlify.
+In production the frontend calls the Render API directly. This avoids Netlify's request timeout during slower AI
+analysis. The backend allows the existing Netlify origin in its CORS configuration. If you change the Netlify domain,
+update `NETLIFY_FRONTEND_ORIGIN` in `backend/app/main.py` and redeploy the backend. Keep `GEMINI_API_KEY` in Render's
+secret environment settings only. Never add it to this repository or to Netlify.
 
 ## Verify the deployed connection
 

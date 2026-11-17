@@ -8,7 +8,34 @@ import {
 } from 'lucide-react'
 
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.PROD ? '' : 'http://127.0.0.1:8000')).replace(/\/$/, '')
+  (import.meta.env.PROD ? 'https://lifepath-firstcommit-26.onrender.com' : 'http://127.0.0.1:8000')).replace(/\/$/, '')
+
+async function readApiJson(response, operation) {
+  const text = await response.text()
+  let payload = null
+  if (text.trim()) {
+    try {
+      payload = JSON.parse(text)
+    } catch {
+      if (!response.ok) {
+        throw new Error(`${operation} could not be completed (HTTP ${response.status}). Please try again.`)
+      }
+      throw new Error(`${operation} returned an unreadable response. Please try again.`)
+    }
+  }
+
+  if (!response.ok) {
+    const detail = payload?.detail
+    const message = typeof detail === 'string' ? detail : detail?.message
+    if (message) throw new Error(message)
+    if ([502, 503, 504].includes(response.status)) {
+      throw new Error(`The service did not finish this request (HTTP ${response.status}). Please try again.`)
+    }
+    throw new Error(`${operation} failed (HTTP ${response.status}). Please try again.`)
+  }
+  if (payload === null) throw new Error(`${operation} returned an empty response. Please try again.`)
+  return payload
+}
 const todayLabel = new Intl.DateTimeFormat('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }).format(new Date()).toUpperCase()
 const fallbackJourney = {
   university: 'Demo National University', programme: 'B.Sc. 2027–28',
@@ -152,6 +179,7 @@ function App() {
   const [journey, setJourney] = useState(null)
   const [source, setSource] = useState('loading')
   const [apiError, setApiError] = useState('')
+  const [apiErrorTitle, setApiErrorTitle] = useState('Backend unavailable.')
   const [selected, setSelected] = useState(() => JSON.parse(localStorage.getItem('lifepath-completed') || '[]'))
   const [branch, setBranch] = useState('selected')
   const [mobileMenu, setMobileMenu] = useState(false)
@@ -164,11 +192,11 @@ function App() {
     setSource('loading'); setApiError('')
     try {
       const response = await fetch(`${API_BASE}/api/demo/journey`, { headers: { Accept: 'application/json' } })
-      if (!response.ok) throw new Error(`Backend returned HTTP ${response.status}`)
-      const payload = await response.json()
+      const payload = await readApiJson(response, 'Loading the demo journey')
       setJourney(normalizeJourney(payload)); setSource('api')
     } catch (error) {
       setJourney(fallbackJourney); setSource('fallback')
+      setApiErrorTitle('Backend unavailable.')
       setApiError(`${error.message || 'Could not connect'} · Showing the built-in fictional demo so you can explore the interface.`)
     }
   }
@@ -194,6 +222,7 @@ function App() {
 
     setUploadBusy(true)
     setApiError('')
+    setApiErrorTitle('Notice analysis failed.')
 
     try {
       const formData = new FormData()
@@ -205,15 +234,7 @@ function App() {
         body: formData
       })
 
-      const payload = await response.json()
-
-      if (!response.ok) {
-        throw new Error(
-          payload?.detail?.message ||
-          payload?.detail ||
-          `Upload failed (HTTP ${response.status})`
-        )
-      }
+      const payload = await readApiJson(response, 'Analysing the notice')
 
       setAnalysis(payload)
       const journeyResponse = await fetch(`${API_BASE}/api/analyses/${payload.id}/journey`, {
@@ -222,11 +243,7 @@ function App() {
         body: JSON.stringify({})
       })
 
-      const journeyPayload = await journeyResponse.json()
-
-      if (!journeyResponse.ok) {
-        throw new Error(journeyPayload?.detail?.message || 'Could not build the admission journey.')
-      }
+      const journeyPayload = await readApiJson(journeyResponse, 'Building the admission journey')
 
       console.log('LIFEPATH journey:', journeyPayload)
       setJourney(normalizeBackendJourney(journeyPayload, payload))
@@ -235,6 +252,7 @@ function App() {
       localStorage.removeItem('lifepath-completed')
       showToast(`Notice processed. ${payload.counts?.items ?? 0} items extracted.`)
     } catch (error) {
+      setApiErrorTitle('Notice analysis failed.')
       setApiError(error.message || 'Could not process this notice.')
     } finally {
       setUploadBusy(false)
@@ -243,6 +261,8 @@ function App() {
 
   async function resolveConflict(conflict, side = null) {
     try {
+      setApiError('')
+      setApiErrorTitle('Could not update the journey.')
       const response = await fetch(
         `${API_BASE}/api/analyses/${analysis.id}/conflicts/resolve`,
         {
@@ -258,11 +278,7 @@ function App() {
         }
       )
 
-      const updatedAnalysis = await response.json()
-
-      if (!response.ok) {
-        throw new Error(updatedAnalysis?.detail?.message || 'Could not resolve conflict.')
-      }
+      const updatedAnalysis = await readApiJson(response, 'Saving your conflict decision')
 
       setAnalysis(updatedAnalysis)
 
@@ -276,11 +292,7 @@ function App() {
           }
         )
 
-        const journeyPayload = await journeyResponse.json()
-
-        if (!journeyResponse.ok) {
-          throw new Error(journeyPayload?.detail?.message || 'Could not build journey.')
-        }
+        const journeyPayload = await readApiJson(journeyResponse, 'Building the admission journey')
 
         setJourney(normalizeBackendJourney(journeyPayload, updatedAnalysis))
         setSource('analysis')
@@ -291,6 +303,7 @@ function App() {
         showToast('Conflict decision saved.')
       }
     } catch (error) {
+      setApiErrorTitle('Could not update the journey.')
       setApiError(error.message || 'Could not resolve conflict.')
     }
   }
@@ -313,7 +326,7 @@ function App() {
       <header className="topbar"><button className="icon-button menu-button" onClick={() => setMobileMenu(!mobileMenu)} aria-label="Open menu"><Menu size={20} /></button><div className="breadcrumb">Workspace <ChevronRight size={14} /> <strong>{page}</strong></div><div className="top-actions"><div className="search-box"><Search size={16} /><span>Search anything...</span><kbd>⌘ K</kbd></div><button className="icon-button notification" aria-label="Notifications" onClick={() => showToast('You’re all caught up.')}><Bell size={18} /><i /></button><div className="avatar top-avatar">A</div></div></header>
       <div className="page-wrap">
         <div className="demo-notice"><div className="demo-icon"><Sparkles size={15} /></div><div><b>DEMO MODE</b><span>{source === 'api' ? 'Connected to the demo journey endpoint. All university and applicant information shown is fictional.' : 'Fictional demonstration data · Not an official university notification'}</span></div><button onClick={loadJourney} disabled={source === 'loading'} title="Retry backend connection"><LoaderCircle className={source === 'loading' ? 'spin' : ''} size={16} /> {source === 'loading' ? 'Connecting' : source === 'api' ? 'Refresh' : 'Retry connection'}</button></div>
-        {apiError && <div className="connection-alert"><AlertCircle size={16} /><span><b>Backend unavailable.</b> {apiError}</span><button onClick={() => setApiError('')} aria-label="Dismiss"><X size={16} /></button></div>}
+        {apiError && <div className="connection-alert"><AlertCircle size={16} /><span><b>{apiErrorTitle}</b> {apiError}</span><button onClick={() => setApiError('')} aria-label="Dismiss"><X size={16} /></button></div>}
         {analysis?.conflicts?.some(c => !c.resolved) && (
   <section className="panel" style={{ marginBottom: 24, padding: 24, color: '#222222', background: '#ffffff' }}>
     <h2>Review conflicting information</h2>

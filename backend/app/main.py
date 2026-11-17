@@ -15,6 +15,7 @@ from app.core.config import get_settings
 from app.db.session import init_db
 
 log = logging.getLogger("lifepath")
+NETLIFY_FRONTEND_ORIGIN = "https://lifepath-firstcommit-26.netlify.app"
 
 
 @asynccontextmanager
@@ -27,8 +28,9 @@ def create_app() -> FastAPI:
     settings = get_settings()
     app = FastAPI(title="LIFEPATH API", version=__version__, lifespan=lifespan,
                   description="Document-grounded admission journey API (Phase 2).")
+    allowed_origins = list(dict.fromkeys((*settings.cors_origins, NETLIFY_FRONTEND_ORIGIN)))
     app.add_middleware(
-        CORSMiddleware, allow_origins=list(settings.cors_origins),
+        CORSMiddleware, allow_origins=allowed_origins,
         allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_headers=["Content-Type"])
     app.include_router(router)
     app.include_router(analyses_router)
